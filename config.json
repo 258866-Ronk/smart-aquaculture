@@ -1,0 +1,40 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "http_port": 5000,
+    "tcp_port": 9000
+  },
+  "database": {
+    "type": "sqlite",
+    "sqlite_path": "data/aqua.db",
+    "mysql": {
+      "host": "127.0.0.1",
+      "port": 3306,
+      "user": "root",
+      "password": "",
+      "database": "aqua"
+    }
+  },
+  "tcp": {
+    "heartbeat_interval": 30,
+    "max_clients": 64
+  },
+  "thresholds": {
+    "dissolved_oxygen": {"min": 4.0, "level": 2, "name": "溶解氧", "unit": "mg/L", "advice": "溶解氧偏低，建议立即开启增氧机"},
+    "temperature": {"min": 15.0, "max": 32.0, "level": 1, "name": "水温", "unit": "℃", "advice": "水温超出适宜区间，注意应激与病害风险"},
+    "ph": {"min": 6.5, "max": 8.5, "level": 1, "name": "pH", "unit": "", "advice": "pH 异常，建议检测水体并酌情调节"},
+    "ammonia": {"max": 0.5, "level": 2, "name": "氨氮", "unit": "mg/L", "advice": "氨氮偏高，建议减料、换水并增氧"}
+  },
+  "collection": {
+    "interval_seconds": 5,
+    "serial": {"enabled": false, "port": "COM3", "baudrate": 9600, "bytesize": 8, "parity": "N", "stopbits": 1},
+    "tcp_host": "127.0.0.1",
+    "tcp_port": 9000,
+    "cache_dir": "data/edge_cache"
+  },
+  "ponds": [
+    {"pond_id": "TANK-A", "name": "1号塘", "area_mu": 8.0, "stock_count": 32000, "stock_date": "2026-03-01", "manager": "陈叔"},
+    {"pond_id": "TANK-B", "name": "2号塘", "area_mu": 10.0, "stock_count": 40000, "stock_date": "2026-03-15", "manager": "陈叔"},
+    {"pond_id": "TANK-C", "name": "3号塘", "area_mu": 12.0, "stock_count": 46000, "stock_date": "2026-04-01", "manager": "李经理"}
+  ]
+}

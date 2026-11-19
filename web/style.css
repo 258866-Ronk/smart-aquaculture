@@ -1,0 +1,96 @@
+:root {
+  --bg: #f4f7fa; --panel: #ffffff; --line: #e3e9f0;
+  --text: #1f2d3d; --muted: #7a8ba3;
+  --blue: #2f6fed; --teal: #14b8a6; --red: #e5484d; --green: #30a46c; --orange: #f59e0b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif; font-size: 14px; }
+.hidden { display: none !important; }
+
+.topbar { display: flex; justify-content: space-between; align-items: center; background: #fff; border-bottom: 1px solid var(--line); padding: 14px 24px; }
+.brand { font-size: 18px; font-weight: 700; }
+.brand .sub { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 10px; }
+.meta .tag { background: var(--blue); color: #fff; border-radius: 4px; padding: 2px 8px; font-size: 12px; margin-left: 10px; }
+.meta { color: var(--muted); }
+
+.tabs { display: flex; gap: 4px; background: #fff; border-bottom: 1px solid var(--line); padding: 0 24px; }
+.tab { border: none; background: none; padding: 12px 18px; cursor: pointer; font-size: 14px; color: var(--muted); border-bottom: 2px solid transparent; }
+.tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
+
+main { padding: 20px 24px; max-width: 1280px; margin: 0 auto; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.stat .num { font-size: 24px; font-weight: 700; color: var(--blue); }
+.stat .label { color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+.card h3 { font-size: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+.card h3 .badge { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: #ecf3fe; color: var(--blue); font-weight: 400; }
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.metric { text-align: center; background: #f8fafc; border-radius: 8px; padding: 10px 4px; }
+.metric .v { font-size: 18px; font-weight: 700; }
+.metric .v.warn { color: var(--orange); }
+.metric .v.crit { color: var(--red); }
+.metric .v.good { color: var(--green); }
+.metric .k { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.card .time { margin-top: 8px; font-size: 12px; color: var(--muted); text-align: right; }
+
+.toolbar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; }
+.toolbar label { color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.toolbar select, .toolbar input, #pond-form input { padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--text); }
+.btn { border: 1px solid var(--line); background: #fff; padding: 7px 16px; border-radius: 6px; cursor: pointer; }
+.btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+.btn.small { padding: 3px 10px; font-size: 12px; }
+.btn.danger { color: var(--red); }
+.hint { color: var(--muted); font-size: 12px; }
+
+.chart-lg { height: 340px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 16px; }
+.chart { height: 300px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+.duo { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
+@media (max-width: 900px) { .duo { grid-template-columns: 1fr; } }
+
+.advice-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; font-size: 13px; line-height: 1.9; }
+.advice-card h4 { margin-bottom: 8px; color: var(--blue); }
+.advice-card .big { font-size: 26px; font-weight: 700; color: var(--teal); }
+
+.tbl { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; border-collapse: separate; border-spacing: 0; overflow: hidden; }
+.tbl th, .tbl td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); font-size: 13px; }
+.tbl th { background: #f8fafc; color: var(--muted); font-weight: 600; }
+.tbl tr:last-child td { border-bottom: none; }
+.lvl-2 { color: var(--red); font-weight: 700; }
+.lvl-1 { color: var(--orange); font-weight: 600; }
+.st-0 { color: var(--red); }
+.st-1 { color: var(--green); }
+
+#pond-form { display: flex; gap: 8px; flex-wrap: wrap; background: var(--panel); border: 1px dashed var(--blue); border-radius: 10px; padding: 12px 16px; margin-bottom: 14px; }
+
+footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px 0 30px; }
+
+/* 操作提示条 */
+.toast { display: none; position: fixed; right: 24px; top: 70px; z-index: 999;
+  padding: 10px 18px; border-radius: 8px; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,.15);
+  max-width: 420px; }
+.toast.ok { background: #103c8f; color: #fff; }
+.toast.err { background: #b3261e; color: #fff; }
+
+/* 灰色徽章（待接入传感器） */
+.badge.gray { background: #eef1f5; color: var(--muted); }
+.card h3 small { color: var(--muted); font-weight: 400; font-size: 12px; }
+.card .time .hint-inline{color:#8a94a6;margin-left:6px;font-size:12px}
+.card .time a{color:#1677ff;text-decoration:none;font-weight:600}
+.card .time a:hover{text-decoration:underline}
+
+/* 图表占位层：数据未加载时不再是空白卡片 */
+#chart-growth, #chart-do-forecast, #chart-ana-growth, #chart-ana-temp, #chart-ana-feed { position: relative; }
+.chart-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px; border-radius: 10px;
+  background: linear-gradient(180deg, #fafcff 0%, #eef4fd 100%); pointer-events: none; }
+.chart-placeholder .ph-icon { font-size: 38px; animation: ph-float 3s ease-in-out infinite; }
+.chart-placeholder .ph-t { font-size: 15px; font-weight: 600; color: #33415e; }
+.chart-placeholder .ph-d { font-size: 12px; color: #8a94a6; max-width: 60%; text-align: center; line-height: 1.6; }
+@keyframes ph-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.charted .chart-placeholder { display: none; }

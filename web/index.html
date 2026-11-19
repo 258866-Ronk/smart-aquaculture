@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智慧渔业数据平台 · 斗门鲈鱼养殖</title>
+<link rel="stylesheet" href="style.css">
+<script src="vendor/echarts.min.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">🐟 智慧渔业数据平台 <span class="sub">人工智能技术助力斗门鲈鱼养殖 · 云边端一体化</span></div>
+  <div class="meta"><span id="clock"></span> <span class="tag">Web 管理端</span></div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="dashboard">实时看板</button>
+  <button class="tab" data-tab="history">历史趋势</button>
+  <button class="tab" data-tab="alerts">告警中心</button>
+  <button class="tab" data-tab="ponds">塘口管理</button>
+  <button class="tab" data-tab="prediction">AI 预测</button>
+  <button class="tab" data-tab="vision">密度识别</button>
+  <button class="tab" data-tab="analysis">生长分析</button>
+  <button class="tab" data-tab="feeding">投喂管理</button>
+  <button class="tab" data-tab="employees">员工管理</button>
+  <button class="tab" data-tab="seedlings">苗种管理</button>
+  <button class="tab" data-tab="medications">用药管理</button>
+</nav>
+
+<main>
+  <!-- 实时看板 -->
+  <section id="tab-dashboard" class="panel active">
+    <div class="stat-row" id="stat-row"></div>
+    <div class="cards" id="pond-cards"></div>
+  </section>
+
+  <!-- 历史趋势 -->
+  <section id="tab-history" class="panel">
+    <div class="toolbar">
+      <label>塘口 <select id="hist-pond"></select></label>
+      <label>指标 <select id="hist-metric">
+        <option value="dissolved_oxygen">溶解氧 (mg/L)</option>
+        <option value="temperature">水温 (℃)</option>
+        <option value="ph">pH</option>
+        <option value="ammonia">氨氮 (mg/L)</option>
+      </select></label>
+      <label>范围 <select id="hist-range">
+        <option value="24">近 24 小时</option>
+        <option value="72">近 3 天</option>
+        <option value="168" selected>近 7 天</option>
+      </select></label>
+      <button id="hist-refresh" class="btn primary">查询</button>
+    </div>
+    <div id="chart-history" class="chart-lg"></div>
+    <div id="chart-history2" class="chart-lg"></div>
+  </section>
+
+  <!-- 告警中心 -->
+  <section id="tab-alerts" class="panel">
+    <div class="toolbar">
+      <label>塘口 <select id="alert-pond"><option value="">全部</option></select></label>
+      <label>状态 <select id="alert-status"><option value="">全部</option><option value="0">未处理</option><option value="1">已处理</option></select></label>
+      <button id="alert-refresh" class="btn primary">刷新</button>
+    </div>
+    <table class="tbl" id="alert-table">
+      <thead><tr><th>ID</th><th>塘口</th><th>指标</th><th>触发值</th><th>阈值</th><th>级别</th><th>时间</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 塘口管理 -->
+  <section id="tab-ponds" class="panel">
+    <div class="toolbar">
+      <button id="pond-add-toggle" class="btn primary">+ 新增塘口</button>
+    </div>
+    <form id="pond-form" class="hidden">
+      <input name="pond_id" placeholder="塘口编号 如 TANK-D" required>
+      <input name="name" placeholder="名称">
+      <input name="area_mu" type="number" step="0.1" placeholder="面积(亩)">
+      <input name="stock_count" type="number" placeholder="放苗数量">
+      <input name="stock_date" type="date">
+      <input name="manager" placeholder="负责人">
+      <button class="btn primary" type="submit">保存</button>
+    </form>
+    <table class="tbl" id="pond-table">
+      <thead><tr><th>编号</th><th>名称</th><th>面积(亩)</th><th>放苗量</th><th>放苗日期</th><th>负责人</th><th>操作</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- AI 预测 -->
+  <section id="tab-prediction" class="panel">
+    <div class="toolbar">
+      <label>塘口 <select id="pred-pond"></select></label>
+      <button id="pred-refresh" class="btn primary">查询预测</button>
+      <span id="pred-meta" class="hint"></span>
+    </div>
+    <div id="chart-growth" class="chart-lg">
+      <div class="chart-placeholder">
+        <div class="ph-icon">🤖</div>
+        <div class="ph-t">AI 生长预测</div>
+        <div class="ph-d">正在为当前塘口生成体重预测曲线，也可点击「查询预测」重新计算</div>
+      </div>
+    </div>
+    <div class="duo">
+      <div id="chart-do-forecast" class="chart">
+        <div class="chart-placeholder">
+          <div class="ph-icon">💧</div>
+          <div class="ph-t">溶氧趋势预测</div>
+          <div class="ph-d">查询后展示未来 6 小时溶解氧变化，辅助缺氧预警</div>
+        </div>
+      </div>
+      <div id="feeding-advice" class="advice-card"></div>
+    </div>
+  </section>
+
+  <!-- 生长分析 -->
+  <section id="tab-analysis" class="panel">
+    <div class="toolbar">
+      <label>塘口 <select id="ana-pond"></select></label>
+      <button id="ana-refresh" class="btn primary">分析</button>
+      <span class="hint">基于水温、投喂与 ML 生长模型，预估生产周期与产量</span>
+    </div>
+    <div class="stat-row" id="ana-stats"></div>
+    <div id="chart-ana-growth" class="chart-lg"></div>
+    <div class="duo">
+      <div id="chart-ana-temp" class="chart"></div>
+      <div id="chart-ana-feed" class="chart"></div>
+    </div>
+  </section>
+
+  <!-- 投喂管理 -->
+  <section id="tab-feeding" class="panel">
+    <div class="toolbar">
+      <label>塘口 <select id="feed-pond"><option value="">全部</option></select></label>
+      <button id="feed-refresh" class="btn primary">刷新</button>
+      <button id="feed-add-toggle" class="btn primary">+ 记录投喂</button>
+    </div>
+    <form id="feed-form" class="hidden">
+      <select name="pond_id" id="feed-form-pond" required></select>
+      <input name="feed_kg" type="number" step="0.1" placeholder="投喂量(kg)" required>
+      <input name="note" placeholder="备注(如上午投喂)">
+      <button class="btn primary" type="submit">保存</button>
+    </form>
+    <div class="stat-row" id="feed-stats"></div>
+    <table class="tbl" id="feed-table">
+      <thead><tr><th>时间</th><th>塘口</th><th>投喂量(kg)</th><th>备注</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 员工管理 -->
+  <section id="tab-employees" class="panel">
+    <div class="toolbar">
+      <button id="emp-add-toggle" class="btn primary">+ 新增员工</button>
+    </div>
+    <form id="emp-form" class="hidden">
+      <input name="name" placeholder="姓名" required>
+      <input name="role" placeholder="岗位(养殖工/技术员)">
+      <input name="phone" placeholder="手机号">
+      <select name="pond_id" id="emp-pond"><option value="">不限塘口</option></select>
+      <input name="hire_date" type="date">
+      <button class="btn primary" type="submit">保存</button>
+    </form>
+    <table class="tbl" id="emp-table">
+      <thead><tr><th>ID</th><th>姓名</th><th>岗位</th><th>手机号</th><th>负责塘口</th><th>入职日期</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 苗种管理 -->
+  <section id="tab-seedlings" class="panel">
+    <div class="toolbar">
+      <button id="seed-add-toggle" class="btn primary">+ 新增苗种批次</button>
+    </div>
+    <form id="seed-form" class="hidden">
+      <select name="pond_id" id="seed-pond" required></select>
+      <input name="batch_no" placeholder="批次号(如 B2026-04)">
+      <input name="species" placeholder="品种(默认海鲈)">
+      <input name="supplier" placeholder="供应商">
+      <input name="count" type="number" placeholder="数量(尾)" required>
+      <input name="spec_cm" type="number" step="0.1" placeholder="规格(cm)">
+      <input name="stock_date" type="date">
+      <button class="btn primary" type="submit">保存</button>
+    </form>
+    <table class="tbl" id="seed-table">
+      <thead><tr><th>ID</th><th>批次号</th><th>塘口</th><th>品种</th><th>供应商</th><th>数量(尾)</th><th>规格(cm)</th><th>放苗日期</th><th>操作</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 用药管理 -->
+  <section id="tab-medications" class="panel">
+    <div class="toolbar">
+      <label>塘口 <select id="med-pond"><option value="">全部</option></select></label>
+      <button id="med-refresh" class="btn primary">刷新</button>
+      <button id="med-add-toggle" class="btn primary">+ 记录用药</button>
+      <span class="hint">内置禁用渔药清单，录入禁药会被自动拦截</span>
+    </div>
+    <form id="med-form" class="hidden">
+      <select name="pond_id" id="med-form-pond" required></select>
+      <input name="med_name" placeholder="药品名" required>
+      <input name="dosage" placeholder="剂量(如 0.5mg/L)">
+      <select name="method"><option>全池泼洒</option><option>拌饵投喂</option><option>药浴浸泡</option><option>注射</option></select>
+      <input name="reason" placeholder="用药原因" style="flex:1">
+      <input name="start_date" type="date">
+      <input name="end_date" type="date">
+      <input name="operator" placeholder="操作人">
+      <input name="withdrawal_days" type="number" placeholder="休药期(天)">
+      <button class="btn primary" type="submit">保存</button>
+    </form>
+    <table class="tbl" id="med-table">
+      <thead><tr><th>ID</th><th>塘口</th><th>药品</th><th>剂量</th><th>方式</th><th>原因</th><th>开始</th><th>结束</th><th>操作人</th><th>休药期(天)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- 密度识别 -->
+  <section id="tab-vision" class="panel">
+    <div class="toolbar">
+      <label>塘口 <select id="vision-pond"></select></label>
+      <input type="file" id="vision-file" accept="image/*">
+      <button id="vision-upload" class="btn primary">上传识别</button>
+      <button id="vision-sample" class="btn">使用测试图</button>
+      <span class="hint">基于 OpenCV 的鱼群密度估算（暗色目标分割 + 连通域计数）</span>
+    </div>
+    <div class="duo">
+      <div class="advice-card" id="vision-result">上传塘口图像后点击“上传识别”。</div>
+      <div id="chart-vision" class="chart"></div>
+    </div>
+    <table class="tbl" id="vision-table">
+      <thead><tr><th>时间</th><th>塘口</th><th>密度等级</th><th>估计鱼数</th><th>置信度</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+<footer>Smart Aquaculture Platform · Flask + SQLite + scikit-learn + OpenCV · 课程实训项目</footer>
+
+<script src="app.js?v=20260913"></script>
+</body>
+</html>

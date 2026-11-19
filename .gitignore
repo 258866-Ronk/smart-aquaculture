@@ -1,0 +1,39 @@
+# Python 虚拟环境 / 缓存
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# 运行数据 / 数据库
+data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3
+
+# 大体积模型文件（超过 GitHub 100MB 限制，运行 scripts/init_data.py 可重建）
+*.joblib
+*.pkl
+*.sav
+*.mat
+
+# 编译 / 二进制依赖
+*.pyi
+*.pyd
+*.dll
+*.lib
+*.a
+*.so
+*.gz
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 日志 / 临时
+*.log
+*.tmp
